@@ -7,23 +7,96 @@
 //
 
 #import "CalculatorViewController.h"
+#import "CalculatorBrain.h"
 
 @interface CalculatorViewController ()
-
+@property (nonatomic) BOOL userIsInTheMiddleOfEnteringANumber;
+@property (nonatomic, strong) CalculatorBrain *brain;
 @end
 
 @implementation CalculatorViewController
 
-- (void)viewDidLoad
+@synthesize display;
+@synthesize userIsInTheMiddleOfEnteringANumber;
+@synthesize brain = _brain;
+
+-(CalculatorBrain *) brain
 {
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    if (!_brain)
+    {
+        _brain = [[CalculatorBrain alloc] init];
+    }
+    return _brain;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+
+- (IBAction)digitPressed:(UIButton *)sender {
+   
+    NSString *digit = sender.currentTitle;
+    UILabel *myDisplay = self.display;
+    NSString *currentDisplayText = myDisplay.text;
+    if (userIsInTheMiddleOfEnteringANumber)
+    {
+        NSString *newDisplayText = [currentDisplayText stringByAppendingString:digit];
+    
+        [self.display setText:newDisplayText];
+    }
+    else
+    {
+        [self.display setText:digit];
+        userIsInTheMiddleOfEnteringANumber = YES;
+    }
 }
+
+- (IBAction)enterPressed {
+    [self.brain pushOperand:[self.display.text doubleValue]];
+    self.userIsInTheMiddleOfEnteringANumber = NO;
+}
+
+- (IBAction)operationPressed:(UIButton *)sender {
+    
+    if (self.userIsInTheMiddleOfEnteringANumber)
+    {
+        [self enterPressed];
+    }
+    
+    NSString *operation = [sender currentTitle];
+    double result = [self.brain performOperation:operation];
+    self.display.text = [NSString stringWithFormat:@"%g", result];
+}
+
+- (IBAction)decimalPointPressed {
+    
+    UILabel *myDisplay = self.display;
+    NSString *currentDisplayText = myDisplay.text;
+    
+    // check to see if the . has already been pressed:
+    NSRange isRange = [currentDisplayText rangeOfString:@"."];
+    if(isRange.location != NSNotFound) {
+        // we found it - do nothing.
+        return;
+    }
+    
+    if (userIsInTheMiddleOfEnteringANumber)
+    {
+        NSString *newDisplayText = [currentDisplayText stringByAppendingString:@"."];
+        [self.display setText:newDisplayText];
+    }
+    else
+    {
+        NSString *newDisplayText = @"0.";
+        [self.display setText:newDisplayText];
+        
+        userIsInTheMiddleOfEnteringANumber = YES;
+    }
+    
+}
+
+
+
+
+
+
+
 
 @end

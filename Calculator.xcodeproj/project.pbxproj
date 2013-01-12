@@ -23,6 +23,7 @@
 		0AECDD9516A1F23700CF8D13 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AECDD7016A1F23700CF8D13 /* Foundation.framework */; };
 		0AECDD9D16A1F23700CF8D13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0AECDD9B16A1F23700CF8D13 /* InfoPlist.strings */; };
 		0AECDDA016A1F23700CF8D13 /* CalculatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AECDD9F16A1F23700CF8D13 /* CalculatorTests.m */; };
+		0AECDDAB16A1FCB600CF8D13 /* CalculatorBrain.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AECDDAA16A1FCB600CF8D13 /* CalculatorBrain.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,8 @@
 		0AECDD9C16A1F23700CF8D13 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0AECDD9E16A1F23700CF8D13 /* CalculatorTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CalculatorTests.h; sourceTree = "<group>"; };
 		0AECDD9F16A1F23700CF8D13 /* CalculatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CalculatorTests.m; sourceTree = "<group>"; };
+		0AECDDA916A1FCB600CF8D13 /* CalculatorBrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalculatorBrain.h; sourceTree = "<group>"; };
+		0AECDDAA16A1FCB600CF8D13 /* CalculatorBrain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalculatorBrain.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +120,8 @@
 		0AECDD7416A1F23700CF8D13 /* Calculator */ = {
 			isa = PBXGroup;
 			children = (
+				0AECDDA916A1FCB600CF8D13 /* CalculatorBrain.h */,
+				0AECDDAA16A1FCB600CF8D13 /* CalculatorBrain.m */,
 				0AECDD7D16A1F23700CF8D13 /* CalculatorAppDelegate.h */,
 				0AECDD7E16A1F23700CF8D13 /* CalculatorAppDelegate.m */,
 				0AECDD8616A1F23700CF8D13 /* MainStoryboard.storyboard */,
@@ -274,6 +279,7 @@
 				0AECDD7B16A1F23700CF8D13 /* main.m in Sources */,
 				0AECDD7F16A1F23700CF8D13 /* CalculatorAppDelegate.m in Sources */,
 				0AECDD8B16A1F23700CF8D13 /* CalculatorViewController.m in Sources */,
+				0AECDDAB16A1FCB600CF8D13 /* CalculatorBrain.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

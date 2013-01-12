@@ -8,6 +8,7 @@
 
 #import "CalculatorViewController.h"
 #import "CalculatorBrain.h"
+#import <math.h>
 
 @interface CalculatorViewController ()
 @property (nonatomic) BOOL userIsInTheMiddleOfEnteringANumber;
@@ -19,6 +20,7 @@
 @synthesize display;
 @synthesize userIsInTheMiddleOfEnteringANumber;
 @synthesize brain = _brain;
+
 
 -(CalculatorBrain *) brain
 {
@@ -65,6 +67,19 @@
     self.display.text = [NSString stringWithFormat:@"%g", result];
 }
 
+- (IBAction)piOperationPressed {
+    
+    // apply whatever is already entered:
+    if (self.userIsInTheMiddleOfEnteringANumber)
+    {
+        [self enterPressed];
+    }
+    
+    // push pI to the display:
+    self.display.text = [NSString stringWithFormat:@"%f", M_PI];
+    [self enterPressed];
+}
+
 - (IBAction)decimalPointPressed {
     
     UILabel *myDisplay = self.display;
@@ -91,12 +106,5 @@
     }
     
 }
-
-
-
-
-
-
-
 
 @end

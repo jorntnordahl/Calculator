@@ -7,6 +7,7 @@
 //
 
 #import "CalculatorBrain.h"
+#import <math.h>
 
 @interface CalculatorBrain()
 
@@ -18,6 +19,8 @@
 @implementation CalculatorBrain
 
 @synthesize operandStack = _operandStack;
+
+#define radianperdegree (M_PI/180)
 
 -(NSMutableArray *) operandStack
 {
@@ -69,6 +72,18 @@
         {
             result = [self popOperand] / divisor;
         }
+    }
+    else if ([operation isEqualToString:@"sin"])
+    {
+        result = sin([self popOperand] * radianperdegree);
+    }
+    else if ([operation isEqualToString:@"cos"])
+    {
+        result = cos([self popOperand] * radianperdegree);
+    }
+    else if ([operation isEqualToString:@"sqrt"])
+    {
+        result = sqrt([self popOperand]);
     }
     
     [self pushOperand:result];

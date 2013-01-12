@@ -74,7 +74,7 @@
     NSString *operation = [sender currentTitle];
     [self addToHistory:operation];
     double result = [self.brain performOperation:operation];
-    self.display.text = [NSString stringWithFormat:@"%g", result];
+    self.display.text = [NSString stringWithFormat:@"%f", result];
 }
 
 - (IBAction)piOperationPressed {
@@ -135,6 +135,13 @@
 
 -(void) addToHistory:(NSString *) value
 {
+    // handle Pi which is passed as 3.14 etc..:
+    NSString *piAsString = [NSString stringWithFormat:@"%f", M_PI];
+    if ([value isEqualToString: piAsString])
+    {
+        value = @"Pi";
+    }
+        
     // strip away the trailing = if we have one:
     NSString *currentDisplayText = self.history.text;
     NSUInteger currentDisplayLength = currentDisplayText.length;
@@ -148,6 +155,12 @@
     
     // add back in the trailing =
     self.history.text = [newDisplayText stringByAppendingString:@" ="];
+}
+
+- (IBAction)posNegPressed {
+    double currentValue = [self.display.text doubleValue];
+    double newValue = currentValue * -1;
+    self.display.text = [NSString stringWithFormat:@"%f", newValue];
 }
 
 @end

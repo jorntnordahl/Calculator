@@ -85,6 +85,14 @@
     {
         result = sqrt([self popOperand]);
     }
+    else if ([operation isEqualToString:@"e"])
+    {
+        result = exp([self popOperand]);
+    }
+    else if ([operation isEqualToString:@"log"])
+    {
+        result = log([self popOperand]);
+    }
     
     [self pushOperand:result];
     

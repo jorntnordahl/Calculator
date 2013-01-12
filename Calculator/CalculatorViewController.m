@@ -20,6 +20,7 @@
 @synthesize display;
 @synthesize userIsInTheMiddleOfEnteringANumber;
 @synthesize brain = _brain;
+@synthesize history;
 
 
 -(CalculatorBrain *) brain
@@ -35,8 +36,8 @@
 - (IBAction)digitPressed:(UIButton *)sender {
    
     NSString *digit = sender.currentTitle;
-    UILabel *myDisplay = self.display;
-    NSString *currentDisplayText = myDisplay.text;
+    NSString *currentDisplayText = self.display.text;
+    
     if (userIsInTheMiddleOfEnteringANumber)
     {
         NSString *newDisplayText = [currentDisplayText stringByAppendingString:digit];
@@ -45,12 +46,20 @@
     }
     else
     {
-        [self.display setText:digit];
-        userIsInTheMiddleOfEnteringANumber = YES;
+        if ([digit isEqualToString:@"0"])
+        {
+            // if user is pressing tons of leading zeros, do zilch
+        }
+        else
+        {
+            [self.display setText:digit];
+            userIsInTheMiddleOfEnteringANumber = YES;
+        }
     }
 }
 
 - (IBAction)enterPressed {
+    [self addToHistory:self.display.text];
     [self.brain pushOperand:[self.display.text doubleValue]];
     self.userIsInTheMiddleOfEnteringANumber = NO;
 }
@@ -63,6 +72,7 @@
     }
     
     NSString *operation = [sender currentTitle];
+    [self addToHistory:operation];
     double result = [self.brain performOperation:operation];
     self.display.text = [NSString stringWithFormat:@"%g", result];
 }
@@ -105,6 +115,39 @@
         userIsInTheMiddleOfEnteringANumber = YES;
     }
     
+}
+
+- (IBAction)clearPressed {
+    [self.brain reset];
+    self.display.text = @"0";
+    self.history.text = @"";
+}
+
+- (IBAction)backspacePressed {
+    
+    NSString *currentDisplayText = self.display.text;
+    NSUInteger currentDisplayLength = currentDisplayText.length;
+    if (currentDisplayLength > 0)
+    {
+        self.display.text = [currentDisplayText substringToIndex:(currentDisplayLength - 1)];
+    }
+}
+
+-(void) addToHistory:(NSString *) value
+{
+    // strip away the trailing = if we have one:
+    NSString *currentDisplayText = self.history.text;
+    NSUInteger currentDisplayLength = currentDisplayText.length;
+    if (currentDisplayLength > 0)
+    {
+        currentDisplayText = [currentDisplayText substringToIndex:(currentDisplayLength - 2)];
+    }
+    
+    // then add the trailing space:
+    NSString *newDisplayText = [[currentDisplayText stringByAppendingString:@" "] stringByAppendingString: value];
+    
+    // add back in the trailing =
+    self.history.text = [newDisplayText stringByAppendingString:@" ="];
 }
 
 @end

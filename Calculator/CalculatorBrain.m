@@ -9,17 +9,17 @@
 #import "CalculatorBrain.h"
 #import <math.h>
 
+#define radianperdegree (M_PI/180)
+
 @interface CalculatorBrain()
 @property (nonatomic, strong) NSMutableArray *programStack;
 @end
-
 
 @implementation CalculatorBrain
 
 @synthesize programStack = _programStack;
 
 
-#define radianperdegree (M_PI/180)
 
 -(NSMutableArray *) programStack
 {
@@ -117,12 +117,22 @@
 
     }
     
-    
-    
     return result;
 }
 
 + (double) runProgram:(id)program
+{
+    NSMutableArray *stack;
+    
+    if ([program isKindOfClass:[NSArray class]])
+    {
+        stack = [program mutableCopy];
+    }
+    
+    return [self popOperandOffStack:stack];
+}
+
++ (double)runProgram:(id)program usingVariableValues:(NSDictionary *) variableValues
 {
     NSMutableArray *stack;
     

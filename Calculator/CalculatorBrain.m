@@ -42,6 +42,11 @@
     [self.programStack addObject: operation];
 }
 
+-(void) pushVariableOperand:(NSString *) operand
+{
+    [self.programStack addObject: operand];
+}
+
 - (id) program
 {
     return [self.programStack copy];
@@ -139,9 +144,8 @@
             else
             {
                 // we have a variable:
-                //NSString *variable = stringObj;
-                
-                return @"TODO: VARIABLE";
+                NSString *variable = stringObj;
+                return variable;
             }
         }
     }
@@ -156,7 +160,7 @@
 
 +(BOOL) isOperationZero:(NSString *) operation
 {
-    if ([operation isEqualToString:@"Pi"])
+    if ([operation isEqualToString:@"π"])
     {
         return YES;
     }

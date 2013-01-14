@@ -52,8 +52,6 @@
     
     if (userIsInTheMiddleOfEnteringANumber)
     {
-        
-        
         NSString *newDisplayText = [currentDisplayText stringByAppendingString:digit];
     
         [self.display setText:newDisplayText];
@@ -113,9 +111,14 @@
         [self enterPressed];
     }
     
+    // push operation onto the stack:
+    [self.brain pushOperation:@"π"];
+    
     // push pI to the display:
-    self.display.text = [NSString stringWithFormat:@"%.2f", M_PI];
-    [self enterPressed];
+    //self.display.text = [NSString stringWithFormat:@"%.2f", M_PI];
+    //[self enterPressed];
+    
+    [self runProgramAndUpdateDisplay];
 }
 
 - (IBAction)decimalPointPressed {
@@ -161,29 +164,6 @@
     }
 }
 
-/*-(void) addToHistory:(NSString *) value
-{
-    // handle Pi which is passed as 3.14 etc..:
-    NSString *piAsString = [NSString stringWithFormat:@"%f", M_PI];
-    if ([value isEqualToString: piAsString])
-    {
-        value = @"Pi";
-    }
-        
-    // strip away the trailing = if we have one:
-    NSString *currentDisplayText = self.history.text;
-    NSUInteger currentDisplayLength = currentDisplayText.length;
-    if (currentDisplayLength > 0)
-    {
-        currentDisplayText = [currentDisplayText substringToIndex:(currentDisplayLength - 2)];
-    }
-    
-    // then add the trailing space:
-    NSString *newDisplayText = [[currentDisplayText stringByAppendingString:@" "] stringByAppendingString: value];
-    
-    // add back in the trailing =
-    self.history.text = [newDisplayText stringByAppendingString:@" ="];
-}*/
 
 - (IBAction)posNegPressed {
     double currentValue = [self.display.text doubleValue];
@@ -205,6 +185,17 @@
 -(void) updateProgramHistory
 {
     self.history.text = [CalculatorBrain descriptionOfProgram:self.brain.program];
+}
+
+// called when user presses r, a or b variable buttons:
+- (IBAction)variablePressed:(UIButton *)sender {
+    
+    NSString *variable = [sender currentTitle];
+    
+    [self.brain pushVariableOperand:variable];
+    self.userIsInTheMiddleOfEnteringANumber = NO;
+    
+    [self updateProgramHistory];
 }
 
 @end

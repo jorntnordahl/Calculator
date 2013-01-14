@@ -13,6 +13,7 @@
 @interface CalculatorViewController ()
 @property (nonatomic) BOOL userIsInTheMiddleOfEnteringANumber;
 @property (nonatomic, strong) CalculatorBrain *brain;
+@property (nonatomic, strong) NSDictionary *testVariableValues;
 @end
 
 @implementation CalculatorViewController
@@ -21,7 +22,18 @@
 @synthesize userIsInTheMiddleOfEnteringANumber;
 @synthesize brain = _brain;
 @synthesize history;
+@synthesize testVariableValues = _testVariableValues;
 
+
+
+-(NSDictionary *) testVariableValues
+{
+    if (!_testVariableValues)
+    {
+        _testVariableValues = [[NSDictionary alloc] init];
+    }
+    return _testVariableValues;
+}
 
 -(CalculatorBrain *) brain
 {
@@ -40,6 +52,8 @@
     
     if (userIsInTheMiddleOfEnteringANumber)
     {
+        
+        
         NSString *newDisplayText = [currentDisplayText stringByAppendingString:digit];
     
         [self.display setText:newDisplayText];
@@ -59,9 +73,10 @@
 }
 
 - (IBAction)enterPressed {
-    [self addToHistory:self.display.text];
     [self.brain pushOperand:[self.display.text doubleValue]];
     self.userIsInTheMiddleOfEnteringANumber = NO;
+    
+    [self updateProgramHistory];
 }
 
 - (IBAction)operationPressed:(UIButton *)sender {
@@ -71,10 +86,23 @@
         [self enterPressed];
     }
     
-    NSString *operation = [sender currentTitle];
-    [self addToHistory:operation];
-    double result = [self.brain performOperation:operation];
-    self.display.text = [NSString stringWithFormat:@"%f", result];
+    // push operation onto the stack:
+    [self.brain pushOperation:[sender currentTitle]];
+    
+    // call method to run program, etc:
+    [self runProgramAndUpdateDisplay];
+}
+
+-(void) runProgramAndUpdateDisplay
+{
+    // run current program:
+    double result = [CalculatorBrain runProgram:self.brain.program usingVariableValues:self.testVariableValues];
+    
+    // show result in the display:
+    self.display.text = [NSString stringWithFormat:@"%.2f", result];
+    
+    // update program history:
+    [self updateProgramHistory];
 }
 
 - (IBAction)piOperationPressed {
@@ -86,7 +114,7 @@
     }
     
     // push pI to the display:
-    self.display.text = [NSString stringWithFormat:@"%f", M_PI];
+    self.display.text = [NSString stringWithFormat:@"%.2f", M_PI];
     [self enterPressed];
 }
 
@@ -133,7 +161,7 @@
     }
 }
 
--(void) addToHistory:(NSString *) value
+/*-(void) addToHistory:(NSString *) value
 {
     // handle Pi which is passed as 3.14 etc..:
     NSString *piAsString = [NSString stringWithFormat:@"%f", M_PI];
@@ -155,12 +183,28 @@
     
     // add back in the trailing =
     self.history.text = [newDisplayText stringByAppendingString:@" ="];
-}
+}*/
 
 - (IBAction)posNegPressed {
     double currentValue = [self.display.text doubleValue];
     double newValue = currentValue * -1;
     self.display.text = [NSString stringWithFormat:@"%f", newValue];
+}
+
+- (void)viewDidLoad
+{
+    self.display.text = @"0";
+    self.history.text = @"";
+    self.variables.text = @"";
+}
+
+- (IBAction)testPressed:(UIButton *)sender {
+    
+}
+
+-(void) updateProgramHistory
+{
+    self.history.text = [CalculatorBrain descriptionOfProgram:self.brain.program];
 }
 
 @end

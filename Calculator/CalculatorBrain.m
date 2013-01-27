@@ -274,11 +274,6 @@
         {
             // if the value is a string, r a or b, and it has a value in the array, use it, else show the
             // variable:
-            NSLog(@"Opration %@", operation);
-            
-            id obj = [values objectForKey:operation];
-            NSLog(@"obj %@", obj);
-            
             if ([values objectForKey:operation])
             {
                 id obj = [values objectForKey:operation];

@@ -153,6 +153,7 @@
     [self.brain reset];
     self.display.text = @"0";
     self.history.text = @"";
+    self.variables.text = @"";
 }
 
 - (IBAction)backspacePressed {

@@ -13,7 +13,7 @@
 @interface CalculatorViewController ()
 @property (nonatomic) BOOL userIsInTheMiddleOfEnteringANumber;
 @property (nonatomic, strong) CalculatorBrain *brain;
-@property (nonatomic, strong) NSDictionary *testVariableValues;
+@property (nonatomic, strong) NSMutableDictionary *testVariableValues;
 @end
 
 @implementation CalculatorViewController
@@ -23,14 +23,15 @@
 @synthesize brain = _brain;
 @synthesize history;
 @synthesize testVariableValues = _testVariableValues;
+@synthesize variables;
 
 
 
--(NSDictionary *) testVariableValues
+-(NSMutableDictionary *) testVariableValues
 {
     if (!_testVariableValues)
     {
-        _testVariableValues = [[NSDictionary alloc] init];
+        _testVariableValues = [[NSMutableDictionary alloc] init];
     }
     return _testVariableValues;
 }
@@ -179,7 +180,55 @@
 }
 
 - (IBAction)testPressed:(UIButton *)sender {
+    NSString *currentTest = sender.currentTitle;
+    NSLog(@"Test: %@", currentTest);
     
+    [self.testVariableValues removeAllObjects];
+    
+    if ([@"T-1" isEqualToString:currentTest])
+    {
+        [self.testVariableValues setValue:@"1" forKey:@"r"];
+    }
+    else if ([@"T-2" isEqualToString:currentTest])
+    {
+        [self.testVariableValues setValue:@"2" forKey:@"r"];
+        [self.testVariableValues setValue:@"1" forKey:@"a"];
+    }
+    else if ([@"T-3" isEqualToString:currentTest])
+    {
+        [self.testVariableValues setValue:@"4" forKey:@"r"];
+        [self.testVariableValues setValue:@"3" forKey:@"a"];
+        [self.testVariableValues setValue:@"2" forKey:@"b"];
+    }
+    else if ([@"T-4" isEqualToString:currentTest])
+    {
+        self.testVariableValues = nil;
+    }
+    
+    // update and run rest of the display:
+    [self updateDisplayWithTestValues];
+    [self updateProgramWithTestValues];
+}
+
+-(void) updateDisplayWithTestValues
+{
+    NSMutableString *testStr = [[NSMutableString alloc] init];
+    
+    for(id key in self.testVariableValues) {
+     
+        NSString *value = [self.testVariableValues objectForKey:key];
+        [testStr appendString:key];
+        [testStr appendString:@"="];
+        [testStr appendString:value];
+        [testStr appendString:@"  "];
+    }
+    
+    self.variables.text = testStr;
+}
+
+-(void) updateProgramWithTestValues
+{
+    [self runProgramAndUpdateDisplay];
 }
 
 -(void) updateProgramHistory

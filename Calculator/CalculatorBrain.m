@@ -211,7 +211,7 @@
     return NO;
 }
 
-+ (double) popOperandOffStack:(NSMutableArray *) stack
++ (double) popOperandOffStack:(NSMutableArray *) stack withValues:(NSMutableDictionary *) values
 {
     double result = 0;
     
@@ -231,46 +231,64 @@
         
         if ([operation isEqualToString:@"+"])
         {
-            result = [self popOperandOffStack:stack] + [self popOperandOffStack:stack];
+            result = [self popOperandOffStack:stack withValues:values] + [self popOperandOffStack:stack withValues:values];
         }
         else if ([operation isEqualToString:@"*"])
         {
-            result = [self popOperandOffStack:stack] * [self popOperandOffStack:stack];
+            result = [self popOperandOffStack:stack withValues:values] * [self popOperandOffStack:stack withValues:values];
         }
         else if ([operation isEqualToString:@"-"])
         {
-            double subtrahend = [self popOperandOffStack:stack];
-            result = [self popOperandOffStack:stack] - subtrahend;
+            double subtrahend = [self popOperandOffStack:stack withValues:values];
+            result = [self popOperandOffStack:stack withValues:values] - subtrahend;
         }
         else if([operation isEqualToString:@"/"])
         {
-            double divisor = [self popOperandOffStack:stack];
+            double divisor = [self popOperandOffStack:stack withValues:values];
             if (divisor)
             {
-                result = [self popOperandOffStack:stack] / divisor;
+                result = [self popOperandOffStack:stack withValues:values] / divisor;
             }
         }
         else if ([operation isEqualToString:@"sin"])
         {
-            result = sin([self popOperandOffStack:stack] * radianperdegree);
+            result = sin([self popOperandOffStack:stack withValues:values] * radianperdegree);
         }
         else if ([operation isEqualToString:@"cos"])
         {
-            result = cos([self popOperandOffStack:stack] * radianperdegree);
+            result = cos([self popOperandOffStack:stack withValues:values] * radianperdegree);
         }
         else if ([operation isEqualToString:@"sqrt"])
         {
-            result = sqrt([self popOperandOffStack:stack]);
+            result = sqrt([self popOperandOffStack:stack withValues:values]);
         }
         else if ([operation isEqualToString:@"e"])
         {
-            result = exp([self popOperandOffStack:stack]);
+            result = exp([self popOperandOffStack:stack withValues:values]);
         }
         else if ([operation isEqualToString:@"log"])
-        {
-            result = log([self popOperandOffStack:stack]);
+        { 
+            result = log([self popOperandOffStack:stack withValues:values]);
         }
-
+        else
+        {
+            // if the value is a string, r a or b, and it has a value in the array, use it, else show the
+            // variable:
+            NSLog(@"Opration %@", operation);
+            
+            id obj = [values objectForKey:operation];
+            NSLog(@"obj %@", obj);
+            
+            if ([values objectForKey:operation])
+            {
+                id obj = [values objectForKey:operation];
+                if ([obj isKindOfClass:[NSString class]])
+                {
+                    NSString *objString = obj;
+                    result = [objString doubleValue];
+                }
+            }
+        }
     }
     
     return result;
@@ -285,10 +303,10 @@
         stack = [program mutableCopy];
     }
     
-    return [self popOperandOffStack:stack];
+    return [self popOperandOffStack:stack withValues:nil];
 }
 
-+ (double)runProgram:(id)program usingVariableValues:(NSDictionary *) variableValues
++ (double)runProgram:(id)program usingVariableValues:(NSMutableDictionary *) variableValues
 {
     NSMutableArray *stack;
     
@@ -297,7 +315,7 @@
         stack = [program mutableCopy];
     }
     
-    return [self popOperandOffStack:stack];
+    return [self popOperandOffStack:stack withValues:variableValues];
 }
 
 
